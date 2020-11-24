@@ -1,5 +1,5 @@
 // Setting up environment variables
-
+require('dotenv').config();
 
 // Our server setup
 const express = require('express');
@@ -8,10 +8,23 @@ const cors = require('cors');
 app.use(cors());
 
 // Connecting Mongo and setting up Mongoose
-
+const mongoose = require('mongoose');
+mongoose.connect(process.env.DB_URI, {
+    auth: {
+        user: process.env.DB_USER,
+        password: process.env.DB_PASS
+    },
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+    useCreateIndex: true,
+    useFindAndModify: false
+})
+.catch(error => console.error(`Error: ${error}`));
 
 // Implementing Body Parser
-
+const bodyParser = require('body-parser');
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // registering the routes
 const routes = require('./routes');
